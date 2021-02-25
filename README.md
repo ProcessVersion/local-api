@@ -6,7 +6,7 @@ Using the help of [this](https://www.youtube.com/watch?v=25_RgVDGGuE) tutorial, 
 
 Base URL: localhost:3000
 
-- [GET] `/fact` | Returns a fact 🧠
+- [GET] `/fact` | Returns a fact 🧠 | [STATUS WIP]
 
 Example response
 
@@ -20,6 +20,6 @@ Example response
 }
 ```
 
-- [GET] `/roast` | Returns a nice roast 🔥
-- [GET] `/pickup` | A nice pickup line 😏
-- [GET] `/joke` | A joke 😂
+- [GET] `/roast` | Returns a nice roast 🔥 | [STATUS: WIP]
+- [GET] `/pickup` | A nice pickup line 😏 | [STATUS: WIP]
+- [GET] `/joke` | A joke 😂 | [STATUS: WIP]
