@@ -23,3 +23,7 @@ Example response
 - [GET] `/roast` | Returns a nice roast 🔥 | [STATUS: WIP]
 - [GET] `/pickup` | A nice pickup line 😏 | [STATUS: WIP]
 - [GET] `/joke` | A joke 😂 | [STATUS: WIP]
+
+# Contact me!
+
+Contact me `Tech!#0620` (398264990567628812)!
