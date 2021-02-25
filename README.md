@@ -1,4 +1,4 @@
-# local-api
+# Local API
 
 Using the help of [this](https://www.youtube.com/watch?v=25_RgVDGGuE) tutorial, I was able to start the "base" of an API
 
