@@ -1,8 +1,8 @@
 require("dotenv").config();
 const express = require("express");
 const app = express();
-const { facts, sources, url } = require("./Utils/json/facts.json");
-const fetch = require("./Utils/Functions/Functions");
+const { facts, sources, url } = require("./JSON/facts.json");
+const fetch = require("./Functions/Functions");
 const { Instagram, Discord } = new fetch();
 
 app.get("/fact/", (req, res) => {
