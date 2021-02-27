@@ -18,7 +18,10 @@
   },
   "homepage": "https://github.com/ProcessVersion/local-api#readme",
   "dependencies": {
+    "axios": "^0.21.1",
+    "discord.js": "^12.5.1",
     "dotenv": "^8.2.0",
-    "express": "^4.17.1"
+    "express": "^4.17.1",
+    "noblox.js": "^4.8.4"
   }
 }
