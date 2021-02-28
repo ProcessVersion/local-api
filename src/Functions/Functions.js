@@ -37,36 +37,42 @@ module.exports = class Fetch {
 		this.Name = this.Name.bind(this);
 		this.RPS = this.RPS.bind(this);
 	}
-	Fact() {
-		try {
-			const ranNum = Math.floor(Math.random() * fact.length);
-			const number = ranNum;
-			const body = fact[number];
+	async Fact() {
+		return new Promise(function (resolve, reject) {
+			try {
+				const ranNum = Math.floor(Math.random() * fact.length);
+				const number = ranNum;
+				const body = fact[number];
 
-			const data = {
-				id: body.id,
-				fact: body.fact,
-				source: body.source,
-				url: body.url,
-				author: body.author,
-			};
+				const data = {
+					id: body.id,
+					fact: body.fact,
+					source: body.source,
+					url: body.url,
+					author: body.author,
+				};
 
-			return new BaseObj({
-				success: true,
-				status: 200,
-				statusMessage: "OK",
-				data: data,
-			});
-		} catch (e) {
-			console.log(e);
+				resolve(
+					new BaseObj({
+						success: true,
+						status: 200,
+						statusMessage: "OK",
+						data: data,
+					})
+				);
+			} catch (e) {
+				console.log(e);
 
-			return new BaseObj({
-				success: false,
-				status: 500,
-				statusMessage: "An unexpected error has occurred",
-				data: null,
-			});
-		}
+				reject(
+					new BaseObj({
+						success: false,
+						status: 500,
+						statusMessage: "An unexpected error has occurred",
+						data: null,
+					})
+				);
+			}
+		});
 	}
 	Pickup() {
 		const { pickup, source } = pick;

@@ -6,8 +6,9 @@ const fetch = require("./Functions/Functions");
 const BaseObj = require("./Structures/BaseObj");
 const { Instagram, Discord, RPS, Roblox, Fact } = new fetch();
 
-app.get("/fact/", (req, res) => {
-	const fact = Fact();
+app.get("/fact/", async (req, res) => {
+	const fact = await Fact();
+	console.log(fact);
 	return res.status(fact.status ? fact.status : 200).send(fact);
 });
 
