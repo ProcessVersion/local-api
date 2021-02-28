@@ -1,0 +1,23 @@
+[
+	{
+		"id": 1,
+		"quote": "hello there",
+		"author": "obi wan",
+		"url": "this is just a test!",
+		"source": "kek"
+	},
+	{
+		"id": 2,
+		"quote": "hello ",
+		"author": "obi wan",
+		"url": "this is just a test!",
+		"source": "kek"
+	},
+	{
+		"id": 3,
+		"quote": "hello ",
+		"author": "obi wan",
+		"url": "is just a test!",
+		"source": "kek"
+	}
+]

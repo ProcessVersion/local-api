@@ -3,30 +3,12 @@ const express = require("express");
 const app = express();
 const { facts, sources, url } = require("./JSON/facts.json");
 const fetch = require("./Functions/Functions");
-const { Instagram, Discord } = new fetch();
+const BaseObj = require("./Structures/BaseObj");
+const { Instagram, Discord, RPS, Roblox, Fact } = new fetch();
 
 app.get("/fact/", (req, res) => {
-	try {
-		const ranNum = Math.floor(Math.random() * facts.length);
-		const number = ranNum;
-		const obj = {
-			fact: facts[number],
-			source: sources[number],
-			url: url[number],
-			success: true,
-			error: false,
-		};
-		return res.status(200).send(obj);
-	} catch (e) {
-		const obj = {
-			fact: null,
-			source: null,
-			url: null,
-			success: false,
-			error: true,
-		};
-		return res.status(500).send(obj);
-	}
+	const fact = Fact();
+	return res.status(fact.status ? fact.status : 200).send(fact);
 });
 
 app.get("/insta/:query", async (req, res) => {
@@ -39,12 +21,15 @@ app.get("/insta/:query", async (req, res) => {
 app.get("/discord/:query", async (req, res) => {
 	const id = req.params.query;
 
-	const test = await Discord(id);
-	return res.status(test.status ? test.status : 200).send(test);
+	const response = await Discord(id);
+	return res.status(response.status ? response.status : 200).send(response);
 });
 
 app.get("/roblox/:query", async (req, res) => {
-	//
+	const username = req.params.query;
+
+	const response = await Roblox(username);
+	return res.status(200).send(response);
 });
 
 app.get("/reddit/subreddit/:query", async (req, res) => {
@@ -55,8 +40,19 @@ app.get("/reddit/users/:query", async (req, res) => {
 	//
 });
 
+app.get("/testing/", async (req, res) => {
+	const yoink = await RPS();
+	res.status(200).send(yoink);
+});
+
 app.use((req, res) => {
-	res.status(404).send("Oops, this route is invalid!");
+	const obj = new BaseObj({
+		success: false,
+		status: 404,
+		statusMessage: "Oops, this route is invalid!",
+		data: null,
+	});
+	res.status(404).send(obj);
 });
 
 app.listen(process.env.PORT, () =>

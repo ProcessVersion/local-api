@@ -1,8 +1,25 @@
+require("dotenv").config();
 const axios = require("axios");
 const BaseObj = require("../Structures/BaseObj");
-require("dotenv").config();
+
+// API
+
 const { Client, UserFlags } = require("discord.js");
 const client = new Client();
+const noblox = require("noblox.js");
+
+// JSON
+const dadjoke = require("../JSON/dadjokes.json");
+const fact = require("../JSON/facts.json");
+const jokes = require("../JSON/joke.json");
+const names = require("../JSON/name.json");
+const never = require("../JSON/never-have-i-ever.json");
+const pick = require("../JSON/pickup.json");
+const riddles = require("../JSON/riddles.json");
+const roasts = require("../JSON/roasts.json");
+const rps = require("../JSON/rps.json");
+const topics = require("../JSON/topics.json");
+const test = require("../JSON/test.json");
 
 module.exports = class Fetch {
 	constructor() {
@@ -20,13 +37,56 @@ module.exports = class Fetch {
 		this.Name = this.Name.bind(this);
 		this.RPS = this.RPS.bind(this);
 	}
-	Fact() {}
-	Pickup() {}
-	Roast() {}
-	Joke() {}
-	Riddles() {}
-	Topic() {}
-	Dadjoke() {}
+	Fact() {
+		try {
+			const ranNum = Math.floor(Math.random() * fact.length);
+			const number = ranNum;
+			const body = fact[number];
+
+			const data = {
+				id: body.id,
+				fact: body.fact,
+				source: body.source,
+				url: body.url,
+				author: body.author,
+			};
+
+			return new BaseObj({
+				success: true,
+				status: 200,
+				statusMessage: "OK",
+				data: data,
+			});
+		} catch (e) {
+			console.log(e);
+
+			return new BaseObj({
+				success: false,
+				status: 500,
+				statusMessage: "An unexpected error has occurred",
+				data: null,
+			});
+		}
+	}
+	Pickup() {
+		const { pickup, source } = pick;
+		const ranNum = Math.floor(Math.random() * pickup);
+	}
+	Roast() {
+		const { roast, source } = roasts;
+	}
+	Joke() {
+		const { joke, punchline, author, url } = jokes;
+	}
+	Riddles() {
+		const { riddle, source } = riddles;
+	}
+	Topic() {
+		const { topic, sources } = topics;
+	}
+	Dadjoke() {
+		const { joke, author, url, punchline } = dadjoke;
+	}
 	async Instagram(username) {
 		if (!username) return null;
 
@@ -87,7 +147,55 @@ module.exports = class Fetch {
 			});
 		}
 	}
-	async Roblox(username) {}
+	async Roblox(username) {
+		if (!username) return;
+
+		const id = await noblox.getIdFromUsername(username);
+		try {
+			if (id) {
+				try {
+					const info = await noblox.getPlayerInfo(parseInt(id));
+					const data = {
+						isBanned: info.isBanned,
+						username: info.username,
+						pastNames: info.oldNames,
+						bio: info.bio,
+						join_date: info.joinDate,
+						age: info.age,
+						friends: info.friendCount,
+						following: info.followingCount,
+						followers: info.followerCount,
+						profile_url: `https://roblox.com/users/${id}/profile`,
+						thumbnail: `https://www.roblox.com/bust-thumbnail/image?userId=${id}&width=420&height=420&format=png`,
+					};
+					return new BaseObj({
+						success: true,
+						status: 200,
+						statusMessage: "OK",
+						data: data,
+					});
+				} catch (err) {
+					console.log(err);
+
+					return new BaseObj({
+						success: true,
+						status: 500,
+						statusMessage: "An unexpected error has occurred",
+						data: null,
+					});
+				}
+			}
+		} catch (e) {
+			console.log(e);
+
+			return new BaseObj({
+				success: true,
+				status: 500,
+				statusMessage: "An unexpected error has occurred",
+				data: null,
+			});
+		}
+	}
 	async Discord(id) {
 		const flags = {
 			DISCORD_EMPLOYEE: `Discord employee`,
@@ -147,7 +255,41 @@ module.exports = class Fetch {
 			});
 		}
 	}
-	async NeverHaveIEver() {}
-	async Name() {}
-	async RPS() {}
+	async NeverHaveIEver() {
+		const { neverhaveiever, source } = never;
+	}
+	async Name() {
+		const { name, source } = names;
+	}
+	async RPS() {
+		try {
+			const ranNum = Math.floor(Math.random() * test.length);
+			const number = ranNum;
+			const body = test[number];
+
+			const data = {
+				id: body.id,
+				quote: body.quote,
+				author: body.author,
+				url: body.url,
+				source: body.source,
+			};
+
+			return new BaseObj({
+				success: true,
+				status: 200,
+				statusMessage: "OK",
+				data: data,
+			});
+		} catch (e) {
+			console.log(e);
+
+			return new BaseObj({
+				success: false,
+				status: 500,
+				statusMessage: "An unexpected error has occurred",
+				data: null,
+			});
+		}
+	}
 };
