@@ -8,7 +8,6 @@ const { Instagram, Discord, RPS, Roblox, Fact } = new fetch();
 
 app.get("/fact/", async (req, res) => {
 	const fact = await Fact();
-	console.log(fact);
 	return res.status(fact.status ? fact.status : 200).send(fact);
 });
 
@@ -16,6 +15,7 @@ app.get("/insta/:query", async (req, res) => {
 	const username = req.params.query;
 
 	const ig = await Instagram(username);
+	res.statusMessage = ig.statusMessage;
 	return res.status(ig.status ? ig.status : 200).send(ig);
 });
 

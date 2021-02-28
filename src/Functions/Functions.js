@@ -154,7 +154,7 @@ module.exports = class Fetch {
 		}
 	}
 	async Roblox(username) {
-		if (!username) return;
+		if (!username) return new BaseObj({ success: false, status: 422, statusMessage: "Missing query" })
 
 		const id = await noblox.getIdFromUsername(username);
 		try {
@@ -298,4 +298,8 @@ module.exports = class Fetch {
 			});
 		}
 	}
+	async subreddit(subreddit) {
+		if(!subreddit) return;
+	}
+	
 };

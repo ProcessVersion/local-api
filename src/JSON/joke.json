@@ -1,9 +1,23 @@
 [
 	{
 		"id": 1,
-		"joke": "",
-		"punchline": "",
-		"author": "",
-		"url": ""
+		"joke": "Whats the leading cause of dry skin?",
+		"punchline": "Towels",
+		"author": "u/Qrow_pine",
+		"url": "https://redd.it/lu8fbg"
+	},
+	{
+		"id": 2,
+		"joke": "The female janitor at my building asked if I would chill and smoke some weed with her",
+		"punchline": "I said no. I can't deal with high maintenance women",
+		"author": "u/Judochop2021",
+		"url": "https://redd.it/lu5awc"
+	},
+	{
+		"id": 3,
+		"joke": "My girlfriend broke up with me for being too “un-American”",
+		"punchline": "I saw it coming from a kilometre away",
+		"author": "u/MrGupppy",
+		"url": "https://redd.it/ltkeo3"
 	}
 ]
