@@ -1,7 +1,6 @@
 require("dotenv").config();
 const express = require("express");
 const app = express();
-const { facts, sources, url } = require("./JSON/facts.json");
 const fetch = require("./Functions/Functions");
 const BaseObj = require("./Structures/BaseObj");
 const { Instagram, Discord, RPS, Roblox, Fact, User, Subreddit } = new fetch();
