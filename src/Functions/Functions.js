@@ -2,7 +2,7 @@ require("dotenv").config();
 const axios = require("axios");
 const BaseObj = require("../Structures/BaseObj");
 
-// API
+// APIS
 
 const { Client, UserFlags } = require("discord.js");
 const client = new Client();
@@ -23,6 +23,7 @@ const test = require("../JSON/test.json");
 
 module.exports = class Fetch {
 	constructor() {
+		this.formatNumber = this.formatNumber.bind(this);
 		this.Fact = this.Fact.bind(this);
 		this.Pickup = this.Pickup.bind(this);
 		this.Roast = this.Roast.bind(this);
@@ -36,6 +37,20 @@ module.exports = class Fetch {
 		this.NeverHaveIEver = this.NeverHaveIEver.bind(this);
 		this.Name = this.Name.bind(this);
 		this.RPS = this.RPS.bind(this);
+		this.User = this.User.bind(this);
+		this.Subreddit = this.Subreddit.bind(this);
+		this.capitalize = this.capitalize.bind(this);
+	}
+	formatNumber(x) {
+		if (typeof x !== "number")
+			throw new ReferenceError("Param must be a number.");
+		return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+	}
+	capitalize(string) {
+		if (!string) throw new ReferenceError("No value given");
+		if (typeof string !== "string")
+			throw new ReferenceError("Given value is not a string");
+		return string.charAt(0).toUpperCase() + string.slice(1);
 	}
 	async Fact() {
 		return new Promise(function (resolve, reject) {
@@ -154,10 +169,14 @@ module.exports = class Fetch {
 		}
 	}
 	async Roblox(username) {
-		if (!username) return new BaseObj({ success: false, status: 422, statusMessage: "Missing query" })
-
-		const id = await noblox.getIdFromUsername(username);
+		if (!username)
+			return new BaseObj({
+				success: false,
+				status: 422,
+				statusMessage: "Missing query",
+			});
 		try {
+			const id = await noblox.getIdFromUsername(username);
 			if (id) {
 				try {
 					const info = await noblox.getPlayerInfo(parseInt(id));
@@ -167,10 +186,10 @@ module.exports = class Fetch {
 						pastNames: info.oldNames,
 						bio: info.bio,
 						join_date: info.joinDate,
-						age: info.age,
+						age: this.formatNumber(info.age),
 						friends: info.friendCount,
-						following: info.followingCount,
-						followers: info.followerCount,
+						following: this.formatNumber(info.followingCount),
+						followers: this.formatNumber(info.followerCount),
 						profile_url: `https://roblox.com/users/${id}/profile`,
 						thumbnail: `https://www.roblox.com/bust-thumbnail/image?userId=${id}&width=420&height=420&format=png`,
 					};
@@ -192,6 +211,14 @@ module.exports = class Fetch {
 				}
 			}
 		} catch (e) {
+			if (e.message == "User not found")
+				return new BaseObj({
+					success: false,
+					status: 404,
+					statusMessage: "This user doesn't exist",
+					data: null,
+				});
+
 			console.log(e);
 
 			return new BaseObj({
@@ -251,6 +278,21 @@ module.exports = class Fetch {
 				data: data,
 			});
 		} catch (e) {
+			if (e.httpStatus == 400)
+				return new BaseObj({
+					success: false,
+					status: 400,
+					statusMessage: "Provided query is not a snowflake (ID)",
+					data: null,
+				});
+			if (e.httpStatus == 404)
+				return new BaseObj({
+					success: false,
+					status: 404,
+					statusMessage: "This user doesn't exist or is banned",
+					data: null,
+				});
+
 			console.log(e);
 
 			return new BaseObj({
@@ -298,8 +340,137 @@ module.exports = class Fetch {
 			});
 		}
 	}
-	async subreddit(subreddit) {
-		if(!subreddit) return;
+	async Subreddit(subreddit) {
+		if (!subreddit)
+			return new BaseObj({
+				success: false,
+				status: 422,
+				statusMessage: "Missing query",
+			});
+		try {
+			const res = await axios.get(
+				`https://www.reddit.com/r/${subreddit}/about.json`
+			);
+			const body = res.data.data;
+
+			const data = {
+				url: `https://www.reddit.com/${body.url}`,
+				name_prefix: body.display_name_prefixed,
+				name: body.display_name,
+				title: body.title,
+				description: body.public_description,
+				created: body.created,
+				created_UTC: body.created_utc,
+				type: this.capitalize(body.subreddit_type),
+				id: body.id,
+				over18: body.over18,
+				quarantined: body.quarantine,
+				lang: this.capitalize(body.lang),
+				members: {
+					online: this.formatNumber(body.accounts_active),
+					subscribers: this.formatNumber(body.subscribers),
+				},
+				colors: {
+					primary_color: body.primary_color,
+					key_color: body.key_color,
+				},
+				images: {
+					header_img: body.header_img.replace(/(amp;)/gi, ""),
+					community_icon: body.community_icon.replace(/(amp;)/gi, ""),
+					background_img: body.banner_background_image.replace(/(amp;)/gi, ""),
+				},
+			};
+
+			return new BaseObj({
+				success: true,
+				status: 200,
+				statusMessage: "OK",
+				data: data,
+			});
+		} catch (e) {
+			console.log(e);
+
+			if (e.response.status == 404)
+				return new BaseObj({
+					success: true,
+					status: 404,
+					statusMessage: "Subreddit not found",
+					data: null,
+				});
+
+			return new BaseObj({
+				success: true,
+				status: 500,
+				statusMessage: "An unexpected error has occurred",
+				data: null,
+			});
+		}
 	}
-	
+	async User(user) {
+		if (!user)
+			return new BaseObj({
+				success: false,
+				status: 422,
+				statusMessage: "Missing query",
+			});
+		try {
+			const res = await axios.get(
+				`https://www.reddit.com/user/${user}/about.json`
+			);
+			const body = res.data;
+
+			if (body.data.hide_from_robots == true) {
+				return new BaseObj({
+					success: true,
+					status: 200,
+					statusMessage: "OK",
+					data: { hidden: true },
+				});
+			}
+
+			const data = {
+				url: `https://reddit.com/${body.data.subreddit.url}`,
+				name: body.data.name,
+				name_prefixed: body.data.subreddit.display_name_prefixed,
+				id: body.data.id,
+				pfp: body.data.icon_img.replace(/(amp;)/gi, ""),
+				verified: body.data.verified,
+				created: body.data.created,
+				created_UTC: body.data.created_utc,
+				total_karma: this.formatNumber(body.data.total_karma),
+				link_karma: this.formatNumber(body.data.link_karma),
+				awarder_karma: body.data.awarder_karma,
+				awardee_karma: body.data.awardee_karma,
+				mod: body.data.is_mod,
+				gold: body.data.is_gold,
+				employee: body.data.is_employee,
+			};
+
+			return new BaseObj({
+				success: true,
+				status: 200,
+				statusMessage: "OK",
+				data: data,
+			});
+		} catch (e) {
+			console.log(e);
+
+			if (e.response.status == 404)
+				return new BaseObj({
+					success: false,
+					status: e.response.status,
+					statusMessage: "I couldn't find this user!",
+				});
+
+			return new BaseObj({
+				success: true,
+				status: 500,
+				statusMessage: "An unexpected error has occurred",
+				data: null,
+			});
+		}
+	}
+	async PrequelMeme() {}
+	async SequelMeme() {}
+	async OTMeme() {}
 };

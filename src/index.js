@@ -4,7 +4,7 @@ const app = express();
 const { facts, sources, url } = require("./JSON/facts.json");
 const fetch = require("./Functions/Functions");
 const BaseObj = require("./Structures/BaseObj");
-const { Instagram, Discord, RPS, Roblox, Fact } = new fetch();
+const { Instagram, Discord, RPS, Roblox, Fact, User, Subreddit } = new fetch();
 
 app.get("/fact/", async (req, res) => {
 	const fact = await Fact();
@@ -34,11 +34,17 @@ app.get("/roblox/:query", async (req, res) => {
 });
 
 app.get("/reddit/subreddit/:query", async (req, res) => {
-	//
+	const subreddit = req.params.query;
+
+	const response = await Subreddit(subreddit);
+	return res.status(response.status ? response.status : 200).send(response)
 });
 
 app.get("/reddit/users/:query", async (req, res) => {
-	//
+	const username = req.params.query;
+
+	const response = await User(username);
+	return res.status(response.status ? response.status : 200).send(response);
 });
 
 app.get("/testing/", async (req, res) => {
