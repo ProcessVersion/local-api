@@ -125,8 +125,6 @@ module.exports = class Fetch {
 			}
 
 			const data = {
-				status: res.status,
-				statusMessage: res.statusText,
 				url: `https://www.instagram.com/${body.graphql.user.username}/`,
 				user: {
 					thumbnail: body.graphql.user.profile_pic_url_hd,
@@ -470,7 +468,14 @@ module.exports = class Fetch {
 			});
 		}
 	}
-	async PrequelMeme() {}
+	async PrequelMeme({ nsfw }) {
+		const res = await axios.get(
+			"https://www.reddit.com/r/prequelmemes.json?sort=top&t=week"
+		);
+		const body = res.data;
+
+		console.log(res.data);
+	}
 	async SequelMeme() {}
 	async OTMeme() {}
 };

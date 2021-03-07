@@ -3,7 +3,7 @@ const express = require("express");
 const app = express();
 const fetch = require("./Functions/Functions");
 const BaseObj = require("./Structures/BaseObj");
-const { Instagram, Discord, RPS, Roblox, Fact, User, Subreddit } = new fetch();
+const { Instagram, Discord, RPS, Roblox, Fact, User, Subreddit, PrequelMeme } = new fetch();
 
 app.get("/fact/", async (req, res) => {
 	const fact = await Fact();
@@ -36,7 +36,7 @@ app.get("/reddit/subreddit/:query", async (req, res) => {
 	const subreddit = req.params.query;
 
 	const response = await Subreddit(subreddit);
-	return res.status(response.status ? response.status : 200).send(response)
+	return res.status(response.status ? response.status : 200).send(response);
 });
 
 app.get("/reddit/users/:query", async (req, res) => {
@@ -48,8 +48,13 @@ app.get("/reddit/users/:query", async (req, res) => {
 
 app.get("/testing/", async (req, res) => {
 	const yoink = await RPS();
-	res.status(200).send(yoink);
+	return res.status(200).send(yoink);
 });
+
+app.get("/prequelmeme/", async (req, res) => {
+	const cool = await PrequelMeme();
+	return; 
+})
 
 app.use((req, res) => {
 	const obj = new BaseObj({
@@ -58,7 +63,7 @@ app.use((req, res) => {
 		statusMessage: "Oops, this route is invalid!",
 		data: null,
 	});
-	res.status(404).send(obj);
+	return res.status(404).send(obj);
 });
 
 app.listen(process.env.PORT, () =>
