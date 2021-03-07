@@ -53,60 +53,81 @@ module.exports = class Fetch {
 		return string.charAt(0).toUpperCase() + string.slice(1);
 	}
 	async Fact() {
-		return new Promise(function (resolve, reject) {
-			try {
-				const ranNum = Math.floor(Math.random() * fact.length);
-				const number = ranNum;
-				const body = fact[number];
+		try {
+			const res = await axios.get(
+				"https://www.reddit.com/r/facts.json?sort=top&t=week"
+			);
+			const body = res.data.data;
 
-				const data = {
-					id: body.id,
-					fact: body.fact,
-					source: body.source,
-					url: body.url,
-					author: body.author,
-				};
+			const ranNum = Math.floor(Math.random() * body.children.length);
 
-				resolve(
-					new BaseObj({
-						success: true,
-						status: 200,
-						statusMessage: "OK",
-						data: data,
-					})
-				);
-			} catch (e) {
-				console.log(e);
+			const index = body.children[ranNum];
 
-				reject(
-					new BaseObj({
-						success: false,
-						status: 500,
-						statusMessage: "An unexpected error has occurred",
-						data: null,
-					})
-				);
-			}
-		});
+			const data = {
+				url: index.data.url,
+				author: index.data.author,
+				fact: index.data.title,
+				description: index.data.selftext,
+				subreddit: index.data.subreddit_name_prefixed,
+				ratio: index.data.upvote_ratio,
+				upvotes: index.data.ups,
+				downvotes: index.data.downs,
+				score: index.data.score,
+				over18: index.data.over_18,
+				created_UTC: index.data.created_utc,
+			};
+			return new BaseObj({
+				success: true,
+				status: 200,
+				statusMessage: "OK",
+				data: data,
+			});
+		} catch (e) {
+			console.log(e);
+
+			return new BaseObj({
+				success: false,
+				status: e.response.status ? e.reponse.status : 500,
+				statusMessage: e.response.statusText
+					? e.response.statusText
+					: "An unexpected error has occurred",
+				data: null,
+			});
+		}
 	}
-	Pickup() {
-		const { pickup, source } = pick;
-		const ranNum = Math.floor(Math.random() * pickup);
+	async Pickup() {
+		const res = await axios.get(
+			"https://www.reddit.com/r/pickuplines.json?sort=top&t=week"
+		);
+		const body = res.data.data.children[0];
+		console.log(body);
 	}
 	Roast() {
-		const { roast, source } = roasts;
+		const { roast, source } = roasts; // No subreddit for this :yikes:
 	}
-	Joke() {
-		const { joke, punchline, author, url } = jokes;
+	async Joke() {
+		const res = await axios.get(
+			"https://www.reddit.com/r/riddles.json?sort=top&t=week"
+		);
+		const body = res.data.data.children[0];
+		console.log(body);
 	}
-	Riddles() {
-		const { riddle, source } = riddles;
+	async Riddles() {
+		const res = await axios.get(
+			"https://www.reddit.com/r/riddles.json?sort=top&t=week"
+		);
+		const body = res.data.data.children[0];
+		console.log(body);
 	}
 	Topic() {
 		const { topic, sources } = topics;
 	}
-	Dadjoke() {
-		const { joke, author, url, punchline } = dadjoke;
+	async Dadjoke() {
+		const res = await axios.get(
+			"https://www.reddit.com/r/dadjokes.json?sort=top&t=week"
+		);
+		const body = res.data.data.children[0];
+		console.log(body);
 	}
 	async Instagram(username) {
 		if (!username) return null;
@@ -468,7 +489,7 @@ module.exports = class Fetch {
 			});
 		}
 	}
-	async PrequelMeme({ nsfw }) {
+	async PrequelMeme() {
 		const res = await axios.get(
 			"https://www.reddit.com/r/prequelmemes.json?sort=top&t=week"
 		);

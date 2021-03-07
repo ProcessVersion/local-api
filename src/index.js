@@ -3,7 +3,20 @@ const express = require("express");
 const app = express();
 const fetch = require("./Functions/Functions");
 const BaseObj = require("./Structures/BaseObj");
-const { Instagram, Discord, RPS, Roblox, Fact, User, Subreddit, PrequelMeme } = new fetch();
+const {
+	Instagram,
+	Discord,
+	RPS,
+	Roblox,
+	Fact,
+	User,
+	Subreddit,
+	PrequelMeme,
+	Riddles,
+	Dadjoke,
+	Joke,
+	Pickup,
+} = new fetch();
 
 app.get("/fact/", async (req, res) => {
 	const fact = await Fact();
@@ -53,7 +66,27 @@ app.get("/testing/", async (req, res) => {
 
 app.get("/prequelmeme/", async (req, res) => {
 	const cool = await PrequelMeme();
-	return; 
+	return;
+});
+
+app.get("/riddle/", async (req, res) => {
+	const cool = await Riddles();
+	return res.status(200).send("Working")
+});
+
+app.get("/pickup/", async (req, res) => {
+	const cool = await Pickup();
+	return res.status(200).send("Working");
+})
+
+app.get("/joke/", async (req, res) => {
+	const response = await Joke();
+	return res.status(200).send("Working")
+})
+
+app.get("/dadjoke/", async (req, res) => {
+	const response = await Dadjoke();
+	return res.status(200).send("Working")
 })
 
 app.use((req, res) => {
