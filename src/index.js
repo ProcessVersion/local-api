@@ -3,6 +3,8 @@ const express = require("express");
 const app = express();
 const fetch = require("./Functions/Functions");
 const BaseObj = require("./Structures/BaseObj");
+const cats = require("http-status-cats").cats;
+const axios = require("axios");
 const {
 	Instagram,
 	Discord,
@@ -71,32 +73,26 @@ app.get("/prequelmeme/", async (req, res) => {
 
 app.get("/riddle/", async (req, res) => {
 	const cool = await Riddles();
-	return res.status(200).send("Working")
+	return res.status(200).send("Working");
 });
 
 app.get("/pickup/", async (req, res) => {
 	const cool = await Pickup();
 	return res.status(200).send("Working");
-})
+});
 
 app.get("/joke/", async (req, res) => {
 	const response = await Joke();
-	return res.status(200).send("Working")
-})
+	return res.status(200).send("Working");
+});
 
 app.get("/dadjoke/", async (req, res) => {
 	const response = await Dadjoke();
-	return res.status(200).send("Working")
-})
+	return res.status(200).send("Working");
+});
 
 app.use((req, res) => {
-	const obj = new BaseObj({
-		success: false,
-		status: 404,
-		statusMessage: "Oops, this route is invalid!",
-		data: null,
-	});
-	return res.status(404).send(obj);
+	return res.status(404).send(cats[404]);
 });
 
 app.listen(process.env.PORT, () =>

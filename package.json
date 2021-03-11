@@ -23,6 +23,7 @@
 		"discord.js": "^12.5.1",
 		"dotenv": "^8.2.0",
 		"express": "^4.17.1",
+		"http-status-cats": "^1.0.0",
 		"noblox.js": "^4.8.4"
 	}
 }
