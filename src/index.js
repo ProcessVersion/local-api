@@ -2,9 +2,6 @@ require("dotenv").config();
 const express = require("express");
 const app = express();
 const fetch = require("./Functions/Functions");
-const BaseObj = require("./Structures/BaseObj");
-const cats = require("http-status-cats").cats;
-const axios = require("axios");
 const {
 	Instagram,
 	Discord,
@@ -68,31 +65,31 @@ app.get("/testing/", async (req, res) => {
 
 app.get("/prequelmeme/", async (req, res) => {
 	const cool = await PrequelMeme();
-	return;
+	return res.status(200).send("WIP");
 });
 
 app.get("/riddle/", async (req, res) => {
 	const cool = await Riddles();
-	return res.status(200).send("Working");
+	return res.status(200).send("WIP");
 });
 
 app.get("/pickup/", async (req, res) => {
 	const cool = await Pickup();
-	return res.status(200).send("Working");
+	return res.status(200).send("WIP");
 });
 
 app.get("/joke/", async (req, res) => {
 	const response = await Joke();
-	return res.status(200).send("Working");
+	return res.status(200).send("WIP");
 });
 
 app.get("/dadjoke/", async (req, res) => {
 	const response = await Dadjoke();
-	return res.status(200).send("Working");
+	return res.status(200).send("WIP");
 });
 
 app.use((req, res) => {
-	return res.status(404).send(cats[404]);
+	return res.status(404).send("Invalid endpoint");
 });
 
 app.listen(process.env.PORT, () =>
